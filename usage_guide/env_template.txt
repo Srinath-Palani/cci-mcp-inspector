@@ -1,0 +1,27 @@
+# MCP Server Inspector - Environment Variables Template
+# 
+# SETUP INSTRUCTIONS:
+# 1. Copy this file: cp env_template.txt .env
+# 2. Fill in your actual tokens in .env
+# 3. .env is in .gitignore and will NOT be committed to git
+#
+# ============================================================
+
+# OpenAI API Key (for MCP Inspector's AI analysis)
+OPENAI_API_KEY=sk-proj-your-openai-key-here
+
+# GitHub Personal Access Token (for GitHub MCP Server)
+GITHUB_PERSONAL_ACCESS_TOKEN=github_pat_your-token-here
+
+# Notion Integration Token (for Notion MCP Server)
+NOTION_TOKEN=secret_your-notion-token-here
+
+# Linear API Key (for Linear MCP Server)
+LINEAR_API_KEY=lin_api_your-linear-key-here
+
+# Auth0 OAuth (if using OAuth)
+AUTH0_CLIENT_ID=your-client-id
+AUTH0_CLIENT_SECRET=your-client-secret
+AUTH0_TOKEN_URL=https://your-tenant.auth0.com/oauth/token
+AUTH0_AUDIENCE=https://your-tenant.auth0.com/api/v2/
+

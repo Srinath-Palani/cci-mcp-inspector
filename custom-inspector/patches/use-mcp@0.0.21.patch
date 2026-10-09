@@ -1,0 +1,113 @@
+diff --git a/dist/chunk-2RRQPJJO.js b/dist/chunk-2RRQPJJO.js
+index acefac702fd9a29ef5290b121b66d5c1f19df1f2..101c3efd66c3136687d96de67e95067cbb5402b5 100644
+--- a/dist/chunk-2RRQPJJO.js
++++ b/dist/chunk-2RRQPJJO.js
+@@ -122,8 +122,8 @@ var BrowserOAuthClientProvider = class {
+    * @param authorizationUrl The fully constructed authorization URL from the SDK.
+    */
+   async redirectToAuthorization(authorizationUrl) {
+-    if (this.preventAutoAuth) return;
+     const sanitizedAuthUrl = await this.prepareAuthorizationUrl(authorizationUrl);
++    if (this.preventAutoAuth) return;
+     const popupFeatures = "width=600,height=700,resizable=yes,scrollbars=yes,status=yes";
+     try {
+       const popup = window.open(sanitizedAuthUrl, `mcp_auth_${this.serverUrlHash}`, popupFeatures);
+diff --git a/dist/react/index.js b/dist/react/index.js
+index 3412d028e34780cdaf6a765c19400e54040887f7..81b1c80463ede8eb0d54a34e7cbf7f17d82979d8 100644
+--- a/dist/react/index.js
++++ b/dist/react/index.js
+@@ -63,6 +63,10 @@ function useMcp(options) {
+   const stateRef = useRef(state);
+   const autoReconnectRef = useRef(autoReconnect);
+   const successfulTransportRef = useRef(null);
++  // Mirror of successfulTransportRef as state, and returned below. A ref cannot
++  // be observed by the consumer, which forced callers to scrape log text to find
++  // out which transport actually connected.
++  const [successfulTransport, setSuccessfulTransport] = useState(null);
+   useEffect(() => {
+     stateRef.current = state;
+     autoReconnectRef.current = autoReconnect;
+@@ -70,13 +74,17 @@ function useMcp(options) {
+   const addLog = useCallback(
+     (level, message, ...args) => {
+       const fullMessage = args.length > 0 ? `${message} ${args.map((arg) => JSON.stringify(arg)).join(" ")}` : message;
+-      console[level](`[useMcp] ${fullMessage}`);
++      // Only write to browser console for warn/error (or when debug=true).
++      // info/debug messages go to the in-app log panel only, suppressing
++      // console noise from the DISABLED_URL pre-connection attempt.
++      if (debug || level === "warn" || level === "error") {
++        console[level](`[useMcp] ${fullMessage}`);
++      }
+       if (isMountedRef.current) {
+         setLog((prevLog) => [...prevLog.slice(-100), { level, message: fullMessage, timestamp: Date.now() }]);
+       }
+     },
+-    []
+-    // Empty dependency array makes this stable
++    [debug]
+   );
+   const disconnect = useCallback(
+     async (quiet = false) => {
+@@ -121,6 +129,13 @@ function useMcp(options) {
+         }
+       }
+       connectingRef.current = false;
++      // When auto-reconnect is off, close the transport immediately so the SDK's
++      // own internal retry loop (scheduleReconnect inside SSEClientTransport) stops.
++      if (!autoReconnectRef.current && transportRef.current) {
++        const t = transportRef.current;
++        transportRef.current = null;
++        t.close().catch(() => {});
++      }
+     },
+     [addLog]
+   );
+@@ -133,11 +148,22 @@ function useMcp(options) {
+       addLog("debug", "Connect called after unmount, aborting.");
+       return;
+     }
++    // useMcp has no disabled mode: this effect-driven connect() runs on mount and
++    // on every url change, so a caller with nothing to connect to yet had to pass
++    // some url. Treat an empty url, or the caller's loopback:1 sentinel, as "not
++    // connecting" — otherwise every mount and every disconnect produced a real
++    // failed connection attempt, a console error, and state 'failed'.
++    if (!url || !url.trim() || /^https?:\/\/(127\.0\.0\.1|\[::1\]|localhost):1(\/|$)/i.test(url.trim())) {
++      addLog("debug", "No connection target supplied; staying idle.");
++      connectingRef.current = false;
++      return;
++    }
+     connectingRef.current = true;
+     connectAttemptRef.current += 1;
+     setError(void 0);
+     setAuthUrl(void 0);
+     successfulTransportRef.current = null;
++    setSuccessfulTransport(null);
+     setState("discovering");
+     addLog("info", `Connecting attempt #${connectAttemptRef.current} to ${url}...`);
+     if (!authProviderRef.current) {
+@@ -245,6 +271,7 @@ function useMcp(options) {
+         await clientRef.current.connect(transportInstance);
+         addLog("info", `Client connected via ${transportType2.toUpperCase()}. Loading tools, resources, and prompts...`);
+         successfulTransportRef.current = transportType2;
++        setSuccessfulTransport(transportType2);
+         setState("loading");
+         const toolsResponse = await clientRef.current.request({ method: "tools/list" }, ListToolsResultSchema);
+         let resourcesResponse = { resources: [], resourceTemplates: [] };
+@@ -341,7 +368,6 @@ function useMcp(options) {
+       }
+     };
+     let finalStatus = "failed";
+-    console.log({ transportType });
+     if (transportType === "sse") {
+       addLog("debug", "Using SSE-only transport mode");
+       finalStatus = await tryConnectWithTransport("sse");
+@@ -645,6 +671,9 @@ function useMcp(options) {
+     error,
+     log,
+     authUrl,
++    // 'http' | 'sse' once connected, null while idle/attempting. Lets callers read
++    // the negotiated transport instead of parsing log messages.
++    successfulTransport,
+     callTool,
+     listResources,
+     readResource,

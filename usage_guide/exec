@@ -1,0 +1,15 @@
+🔍 After Adding Your Server
+
+Verify the JSON is valid:
+	   python -c "import json; print(json.load(open('examples/example_servers.json')))"
+
+List available servers:
+	   python -c "import json; [print(s['name']) for s in json.load(open('examples/example_servers.json'))['servers']]"
+
+Run inspection:
+	   python -m src.workflows.mcp_inspector_workflow --server YOUR_SERVER_NAME
+
+Generate the MCP config from Oauth token
+	python generate_mcp_config_from_oauth.py oauth_tokens.json \
+  --output-dir ./configs \
+  --output-file my_mcp_servers.json

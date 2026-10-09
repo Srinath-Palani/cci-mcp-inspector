@@ -1,0 +1,33 @@
+{
+  "name": "comprehensive-example",
+  "description": "Example showing all configuration options",
+  
+  "connection_type": "sse",
+  "endpoint_url": "https://api.example.com/mcp",
+  
+  "mcp_version": "2025-06-18",
+  
+  "authentication": {
+    "type": "bearer_token",
+    "token": "your-token-here",
+    "flow": "authorization_code"
+  },
+  
+  "tls_version": "1.3",
+  
+  "pricing": "free",
+  
+  "repository": "https://github.com/organization/mcp-server",
+  
+  "source": "https://github.com/organization/mcp-server",
+  
+  "deployment": "remote",
+  
+  "hosting": "saas",
+  
+  "metadata": {
+    "version": "1.0.0",
+    "maintainer": "Your Name",
+    "license": "MIT"
+  }
+}

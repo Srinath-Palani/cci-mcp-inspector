@@ -1,0 +1,2 @@
+patchedDependencies:
+  use-mcp@0.0.21: patches/use-mcp@0.0.21.patch

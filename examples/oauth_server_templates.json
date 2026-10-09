@@ -1,0 +1,159 @@
+{
+  "oauth_templates": [
+    {
+      "name": "generic-client-credentials",
+      "description": "Generic OAuth 2.1 Client Credentials template",
+      "connection_type": "sse",
+      "endpoint_url": "https://api.example.com/mcp",
+      "authentication": {
+        "type": "oauth2_1_client_credentials",
+        "token_url": "https://api.example.com/oauth/token",
+        "client_id": "YOUR_CLIENT_ID",
+        "client_secret": "YOUR_CLIENT_SECRET",
+        "scopes": ["read", "write"]
+      },
+      "mcp_version": "2025-06-18",
+      "tls_version": "1.3",
+      "deployment": "remote"
+    },
+    {
+      "name": "generic-authorization-code",
+      "description": "Generic OAuth 2.1 Authorization Code template",
+      "connection_type": "sse",
+      "endpoint_url": "https://api.example.com/mcp",
+      "authentication": {
+        "type": "oauth2_1_authorization_code",
+        "authorize_url": "https://api.example.com/oauth/authorize",
+        "token_url": "https://api.example.com/oauth/token",
+        "client_id": "YOUR_CLIENT_ID",
+        "client_secret": "YOUR_CLIENT_SECRET",
+        "redirect_uri": "http://localhost:8080/callback",
+        "scopes": ["read", "write"]
+      },
+      "mcp_version": "2025-06-18",
+      "tls_version": "1.3",
+      "deployment": "remote"
+    },
+    {
+      "name": "google-cloud-oauth",
+      "description": "Google Cloud Platform with OAuth",
+      "connection_type": "sse",
+      "endpoint_url": "https://YOUR_SERVICE.run.app/mcp",
+      "authentication": {
+        "type": "oauth2_1_client_credentials",
+        "token_url": "https://oauth2.googleapis.com/token",
+        "client_id": "YOUR_CLIENT_ID.apps.googleusercontent.com",
+        "client_secret": "YOUR_CLIENT_SECRET",
+        "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+      },
+      "mcp_version": "2025-06-18",
+      "pricing": "free",
+      "deployment": "remote"
+    },
+    {
+      "name": "github-oauth",
+      "description": "GitHub API with OAuth",
+      "connection_type": "sse",
+      "endpoint_url": "https://api.github.com/mcp",
+      "authentication": {
+        "type": "oauth2_1_authorization_code",
+        "authorize_url": "https://github.com/login/oauth/authorize",
+        "token_url": "https://github.com/login/oauth/access_token",
+        "client_id": "YOUR_GITHUB_CLIENT_ID",
+        "client_secret": "YOUR_GITHUB_CLIENT_SECRET",
+        "scopes": ["repo", "read:org"]
+      },
+      "repository": "https://github.com/modelcontextprotocol/servers",
+      "pricing": "free"
+    },
+    {
+      "name": "azure-ad-oauth",
+      "description": "Microsoft Azure AD with OAuth",
+      "connection_type": "sse",
+      "endpoint_url": "https://YOUR_APP.azurewebsites.net/mcp",
+      "authentication": {
+        "type": "oauth2_1_client_credentials",
+        "token_url": "https://login.microsoftonline.com/YOUR_TENANT_ID/oauth2/v2.0/token",
+        "client_id": "YOUR_APPLICATION_CLIENT_ID",
+        "client_secret": "YOUR_CLIENT_SECRET",
+        "scopes": ["https://graph.microsoft.com/.default"]
+      },
+      "pricing": "paid",
+      "deployment": "remote"
+    },
+    {
+      "name": "auth0-oauth",
+      "description": "Auth0 with OAuth Client Credentials",
+      "connection_type": "sse",
+      "endpoint_url": "https://your-api.com/mcp",
+      "authentication": {
+        "type": "oauth2_1_client_credentials",
+        "token_url": "https://YOUR_DOMAIN.auth0.com/oauth/token",
+        "client_id": "YOUR_CLIENT_ID",
+        "client_secret": "YOUR_CLIENT_SECRET",
+        "audience": "https://your-api.com",
+        "scopes": ["read:all"]
+      },
+      "deployment": "remote"
+    },
+    {
+      "name": "notion-oauth",
+      "description": "Notion with OAuth",
+      "connection_type": "sse",
+      "endpoint_url": "https://api.notion.com/v1/mcp",
+      "authentication": {
+        "type": "oauth2_1_authorization_code",
+        "authorize_url": "https://api.notion.com/v1/oauth/authorize",
+        "token_url": "https://api.notion.com/v1/oauth/token",
+        "client_id": "YOUR_NOTION_CLIENT_ID",
+        "client_secret": "YOUR_NOTION_CLIENT_SECRET",
+        "redirect_uri": "http://localhost:8080/callback",
+        "scopes": ["read_content", "update_content"]
+      },
+      "pricing": "free",
+      "repository": "https://developers.notion.com"
+    },
+    {
+      "name": "custom-oauth-server",
+      "description": "Custom company OAuth server template",
+      "connection_type": "sse",
+      "endpoint_url": "https://mcp.yourcompany.com/api",
+      "authentication": {
+        "type": "oauth2_1_client_credentials",
+        "token_url": "https://auth.yourcompany.com/oauth/token",
+        "client_id": "service-account-mcp-inspector",
+        "client_secret": "YOUR_SERVICE_ACCOUNT_SECRET",
+        "scopes": ["mcp:read", "mcp:write", "mcp:admin"]
+      },
+      "mcp_version": "2025-06-18",
+      "tls_version": "1.3",
+      "deployment": "remote",
+      "repository": "https://github.com/yourcompany/mcp-server"
+    }
+  ],
+  "instructions": {
+    "how_to_use": "Copy a template that matches your OAuth provider, fill in your credentials, and add to example_servers.json",
+    "required_fields": [
+      "name",
+      "endpoint_url",
+      "authentication.type",
+      "authentication.token_url",
+      "authentication.client_id",
+      "authentication.client_secret"
+    ],
+    "optional_fields": [
+      "authentication.scopes",
+      "authentication.authorize_url (for authorization_code flow)",
+      "authentication.redirect_uri (for authorization_code flow)",
+      "authentication.audience (for Auth0, Azure)"
+    ],
+    "getting_credentials": {
+      "google": "https://console.cloud.google.com/apis/credentials",
+      "github": "https://github.com/settings/developers",
+      "azure": "https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/RegisteredApps",
+      "auth0": "https://manage.auth0.com/dashboard",
+      "notion": "https://www.notion.so/my-integrations"
+    }
+  }
+}
+

@@ -1,0 +1,154 @@
+{
+  "servers": [
+    {
+      "name": "Notion-mcp",
+      "description": "Notion MCP Server for Remote endpoint_url",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],      
+      "endpoint_url": "https://mcp.notion.com/mcp",
+      "env": {
+        "NOTION_TOKEN": "****"
+      },
+      "skip": 1
+    },
+    {
+      "name": "Notion-gemini-oauth",
+      "description": "Notion MCP Server with OAuth from Gemini",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "endpoint_url": "https://mcp.notion.com/mcp",
+      "env": {
+        "NOTION_TOKEN": "**"
+      },
+      "authentication": {
+        "type": "oauth2_1_authorization_code",
+        "token_url": "https://mcp.notion.com/token",
+        "client_id": "Ib86RDCEGDe07PbL",
+        "access_token": "**",
+        "refresh_token": "**",
+        "expires_at": 1762535588169
+      },
+      "skip": 0
+    },
+    {
+      "name": "Linear",
+      "description": "Linear MCP Server",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@tacticlaunch/mcp-linear"],
+      "endpoint_url": "https://mcp.linear.app/sse",
+      "env": {
+        "LINEAR_API_KEY": "****"
+      },
+      "skip": 0
+    },
+    {
+      "name": "Box",
+      "description": "Box MCP Server",
+      "connection_type": "stdio",
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/mcp-server-box",
+        "run",
+        "src/mcp_server_box.py"
+      ],
+      "env": {
+        "BOX_CLIENT_ID": "${BOX_CLIENT_ID}",
+        "BOX_CLIENT_SECRET": "${BOX_CLIENT_SECRET}",
+        "BOX_REDIRECT_URL": "${BOX_REDIRECT_URL}",
+        "BOX_MCP_SERVER_AUTH_TOKEN": "${BOX_MCP_SERVER_AUTH_TOKEN}"
+      },
+      "repository": "https://github.com/box-community/mcp-server-box",
+      "skip": 1
+    },
+    {
+      "name": "GitHub",
+      "description": "GitHub Official MCP Server",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      },
+      "repository": "https://github.com/github/github-mcp-server",
+      "skip": 1
+    },
+    {
+      "name": "GitHub-ReadOnly",
+      "description": "GitHub MCP Server (Read-Only Mode - Safe)",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github", "--read-only"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}",
+        "GITHUB_READ_ONLY": "1"
+      },
+      "repository": "https://github.com/github/github-mcp-server",
+      "skip": 0
+    },
+    {
+      "name": "Sentry-github",
+      "description": "Sentry MCP Server",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@sentry/mcp-server@latest"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      },
+      "repository": "https://github.com/faurealexis/sentry-mcp-server",
+      "skip": 1
+    },
+    {
+      "name": "Dynatrace-github",
+      "description": "Dynatrace MCP Server",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@dynatrace/mcp-server"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      },
+      "repository": "https://github.com/dynatrace-oss/dynatrace-mcp",
+      "skip": 1
+    },
+    {
+      "name": "Asana",
+      "description": "Asana MCP Server",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@asana/mcp-server"],
+      "env": {
+        "ASANA_ACCESS_TOKEN": "${ASANA_ACCESS_TOKEN}"
+      },
+      "deployment": "local",
+      "pricing": "free",
+      "repository": "https://github.com/asana/mcp-server",
+      "skip": 1
+    },
+    {
+      "name": "Canva-gemini-oauth",
+      "description": "Canva MCP Server with OAuth from Gemini",
+      "connection_type": "stdio",
+      "command": "npx",
+      "args": ["-y",
+        "@canva/cli@latest",
+        "mcp"],
+      "endpoint_url": "https://mcp.canva.com/mcp",
+      "env": {
+        "CANVA_ACCESS_TOKEN": "**"
+      },
+      "authentication": {
+        "type": "oauth2_1_authorization_code",
+        "token_url": "https://mcp.canva.com/token",
+        "client_id": "**",
+        "access_token": "**",
+        "refresh_token": "**",
+        "expires_at": 1762544552073
+      },
+      "skip": 0
+    }
+  ]
+}
+  

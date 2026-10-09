@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Secrets — never commit real env files
+.env
+.env.*
+!.env.template
+
+# Node / frontend
+node_modules/
+custom-inspector/node_modules/
+api_bridge/my-app/node_modules/
+
+# Build output
+dist/
+build/
+
+# Runtime artifacts
+reports/
+*.log
+.DS_Store
+
+# Tooling caches
+.lore/
+.pytest_cache/
+.mypy_cache/
+
+# Unused starter template (nested git repo, real UI is custom-inspector/)
+api_bridge/my-app/

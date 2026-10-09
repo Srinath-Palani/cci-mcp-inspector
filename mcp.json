@@ -1,0 +1,11 @@
+{
+  "servers": [
+    {
+      "name": "wingstop",
+      "description": "wingstop MCP Server",
+      "connection_type": "stdio",
+      "repository": "https://github.com/talosdeus/wiki-js-mcp",
+  "command": "/Users/srinathp/MCP/repo_clone/wiki-js-mcp/start-server.sh"
+    }
+  ]
+}
