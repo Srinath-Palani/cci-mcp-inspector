@@ -20,6 +20,11 @@ import sys
 from pathlib import Path
 from typing import Optional, List
 
+# Must run before any module opens an HTTPS connection: honor the enterprise
+# certificate store (OS keychain) so corporate TLS-inspection roots are accepted.
+from src.utility.tls_trust import configure_enterprise_tls_trust
+configure_enterprise_tls_trust()
+
 from src.utility.utils import Utils
 
 # Re-exported for backward compatibility — api_bridge/main.py and other callers

@@ -21,6 +21,11 @@ from pydantic import BaseModel
 server_inspector_path = Path(__file__).parent.parent
 sys.path.insert(0, str(server_inspector_path))
 
+# Must run before any module opens an HTTPS connection: honor the enterprise
+# certificate store (OS keychain) so corporate TLS-inspection roots are accepted.
+from src.utility.tls_trust import configure_enterprise_tls_trust
+configure_enterprise_tls_trust()
+
 from src.utility.auth_discovery import AuthenticationDiscovery
 from src.workflows.mcp_inspector_workflow import run_mcp_inspection, _build_final_report, _print_inspection_summary
 from src.utility.utils import Utils

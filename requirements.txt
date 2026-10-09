@@ -21,3 +21,7 @@ requests>=2.31.0
 # src/utility/mcp_capability_fetcher.py.
 mcp==1.28.1
 httpx>=0.27.0
+# Trust the OS-native certificate store (macOS Keychain / Windows cert store) so
+# corporate TLS-inspection roots (Netskope, Zscaler, …) installed by IT are honored
+# without anyone setting SSL_CERT_FILE. Requires Python >= 3.10.
+truststore; python_version >= "3.10"
