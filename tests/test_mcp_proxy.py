@@ -11,6 +11,9 @@ flag off.
 
 Run directly:  .venv/bin/python test_mcp_proxy.py
 """
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
+
 
 import asyncio
 import os

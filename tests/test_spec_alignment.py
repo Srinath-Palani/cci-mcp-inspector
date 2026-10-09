@@ -8,6 +8,9 @@ Regression tests for the 2026-09 spec-alignment work:
 - Aggregated protocol + capabilities CSVs
 - Batch per-server download route
 """
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
+
 
 import asyncio
 import csv
@@ -95,8 +98,8 @@ with tempfile.TemporaryDirectory() as d:
     path = CapabilityCSVExporter(discovery, {"name": "s"}).save(Path(d))
     rows = list(csv.reader(open(path)))
 check("header is skill format (no rw_source in output)",
-      rows[0] == ["tool_name", "description", "parameters", "inputSchema",
-                  "outputSchema", "supports_read", "supports_write",
+      rows[0] == ["tool_name", "description", "parameters", "input_schema",
+                  "output_schema", "supports_read", "supports_write",
                   "supports_delete"], rows[0])
 check("row count = tools only", len(rows) == 3, len(rows))
 check("required param starred", rows[1][2] == "location:string*", rows[1][2])
@@ -318,7 +321,8 @@ with tempfile.TemporaryDirectory() as d:
 check("protocol header",
       proto[0] == ["server_name", "latest_spec", "negotiated_protocol",
                    "latest_supported", "version_match", "era_evidence",
-                   "negotiation_walk"], proto[0])
+                   "negotiation_walk", "resolved_transport", "transport_status",
+                   "resolved_url"], proto[0])
 check("behind flag", proto[1][4] == "behind", proto[1])
 check("unknown flag", proto[2][4] == "unknown", proto[2])
 check("caps merged with server prefix", caps[1][0] == "DeepWiki" and caps[2][0] == "NoProbe", caps)
@@ -329,8 +333,14 @@ check("caps header has no rw_source",
 
 
 print("batch per-server download route:")
+# The API's loopback guard treats TestClient's host ("testclient") as non-local,
+# so set a token before importing the app and send it as a bearer on each call.
+import os as _os
+_os.environ.setdefault("MCP_INSPECTOR_TOKEN", "test-token")
 import main as api_main
 from fastapi.testclient import TestClient
+
+_AUTH = {"Authorization": "Bearer test-token"}
 
 d = Path(tempfile.gettempdir()) / "mcp_inspector_api" / "bdltest"
 d.mkdir(parents=True, exist_ok=True)
@@ -348,23 +358,23 @@ class _Job:
 
 with patch.object(api_main.job_manager, "get_job", lambda jid: _Job()):
     with TestClient(api_main.app) as c:
-        r = c.get("/api/inspect/batch/g1/server/bdltest/download/capabilities_csv")
+        r = c.get("/api/inspect/batch/g1/server/bdltest/download/capabilities_csv", headers=_AUTH)
         check("per-server caps 200", r.status_code == 200, r.status_code)
         check("per-server caps body", "ask,Ask" in r.text, r.text[:40])
         check("per-server caps filename", "bdltest_capabilities.csv" in
               r.headers.get("content-disposition", ""), r.headers.get("content-disposition"))
-        r = c.get("/api/inspect/batch/g1/server/bdltest/download/csv")
+        r = c.get("/api/inspect/batch/g1/server/bdltest/download/csv", headers=_AUTH)
         check("per-server checklist 200 and distinct", r.status_code == 200 and "Category" in r.text)
-        r = c.get("/api/inspect/batch/g1/server/bdltest/download/attributes_csv")
+        r = c.get("/api/inspect/batch/g1/server/bdltest/download/attributes_csv", headers=_AUTH)
         check("per-server attributes_csv 200", r.status_code == 200, r.status_code)
         check("per-server attributes_csv body", "Transport Protocol" in r.text, r.text[:60])
         check("attributes filename", "bdltest_attributes.csv" in
               r.headers.get("content-disposition", ""), r.headers.get("content-disposition"))
-        r = c.get("/api/inspect/batch/g1/server/stranger/download/csv")
+        r = c.get("/api/inspect/batch/g1/server/stranger/download/csv", headers=_AUTH)
         check("server not in group -> 404", r.status_code == 404, r.status_code)
-        r = c.get("/api/inspect/batch/nope/server/bdltest/download/csv")
+        r = c.get("/api/inspect/batch/nope/server/bdltest/download/csv", headers=_AUTH)
         check("unknown group -> 404", r.status_code == 404, r.status_code)
-        r = c.get("/api/inspect/batch/g1/server/bdltest/download/bogus")
+        r = c.get("/api/inspect/batch/g1/server/bdltest/download/bogus", headers=_AUTH)
         check("bad format -> 400", r.status_code == 400, r.status_code)
 
 del api_main._batch_groups["g1"]

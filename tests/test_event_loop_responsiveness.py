@@ -16,6 +16,9 @@ and asserts three things a blocked event loop cannot do:
 
 Run directly:  .venv/bin/python test_event_loop_responsiveness.py
 """
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
+
 
 import asyncio
 import socket

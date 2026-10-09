@@ -1,4 +1,5 @@
 """
+import sys as _sys, os as _os; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 Tests for the bounded-concurrency batch engine (POST /api/inspect/batch).
 
 The original requirement was "5 to 10 remote endpoints at a time", with remote
@@ -24,6 +25,9 @@ the MCP pipeline (which the other e2e tests cover).
 
 Run directly:  .venv/bin/python test_batch_concurrency.py
 """
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
+
 
 import asyncio
 import sys

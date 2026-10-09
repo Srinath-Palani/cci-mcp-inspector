@@ -1,3 +1,5 @@
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
 #!/usr/bin/env python3
 """
 Installation Test Script for MCP Server Inspector
@@ -49,7 +51,7 @@ def test_project_structure():
     """Test that all required directories and files exist."""
     print("🔍 Testing project structure...")
     
-    project_root = Path(__file__).parent
+    project_root = Path(__file__).parent.parent
     
     required_paths = [
         "src/agents/mcp_discovery_agent.py",
@@ -87,7 +89,7 @@ def test_configuration():
     """Test that configuration is valid."""
     print("🔍 Testing configuration...")
     
-    project_root = Path(__file__).parent
+    project_root = Path(__file__).parent.parent
     
     # Check .env file
     env_file = project_root / ".env"

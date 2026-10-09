@@ -1,4 +1,5 @@
 """
+import sys as _sys, os as _os; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 API-bridge e2e: batch run against a REAL local MCP server, then per-server
 and combined downloads over HTTP — the exact flow the UI's batch buttons drive.
 
@@ -12,6 +13,9 @@ Covers:
   5. GET  /api/inspect/batch/{gid}/server/{name}/download/csv and
      .../capabilities_csv -> per-server files, distinct content
 """
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
+
 
 import csv
 import io

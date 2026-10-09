@@ -1,6 +1,9 @@
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
 import sys; sys.path.insert(0, "api_bridge")
 import main
 from fastapi.testclient import TestClient
+import sys as _sys, os as _os; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 ok = fail = 0
 def check(label, cond, extra=""):
     global ok, fail

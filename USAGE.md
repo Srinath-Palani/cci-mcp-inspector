@@ -72,7 +72,7 @@ pip install -r requirements.txt
 
 ```bash
 # Test that all packages are installed correctly
-python test_installation.py
+python tests/test_installation.py
 ```
 
 You should see:

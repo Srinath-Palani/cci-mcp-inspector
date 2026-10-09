@@ -1,4 +1,5 @@
 """
+import sys as _sys, os as _os; _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 API-bridge e2e: SINGLE-server inspection over HTTP — the path the single-view
 ExportButtons drive:
 
@@ -7,6 +8,9 @@ ExportButtons drive:
   GET  /api/reports/{server}/csv              -> attribute checklist
   GET  /api/reports/{server}/capabilities_csv -> skill-format capabilities CSV
 """
+import sys as _s, os as _o
+_s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__))))
+
 
 import csv
 import io
