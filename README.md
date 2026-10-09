@@ -47,20 +47,37 @@ MCP_Server_Inspector/
 
 ## Quick start
 
-### 1. Install
+### 1. Clone & install
+
+The repo root **is** the inspector — there is no nested `MCP_Server_Inspector/`
+folder. Clone, then create the virtualenv at the repo root (it is gitignored, so
+everyone creates their own):
 
 ```bash
-cd MCP_Server_Inspector
-python3.13 -m venv .venv
-source .venv/bin/activate
+git clone https://github.com/Srinath-Palani/cci-mcp-inspector.git
+cd cci-mcp-inspector                 # repo root — NOT custom-inspector
+
+python3.13 -m venv .venv             # create the venv HERE (repo root)
+source .venv/bin/activate            # prompt shows (.venv)
 pip install -r requirements.txt
 ```
 
-Create a `.env` for the LLM analysis step (see `.env.template`):
+Create a `.env` for the LLM analysis step (copy `.env.template`, fill it in):
 
 ```bash
 OPENAI_API_KEY=sk-proj-<your-key>
 ```
+
+> **Run backend commands from the repo root, not from `custom-inspector/`.**
+> `custom-inspector/` is the React frontend — it has no Python venv and no
+> `main.py`. The venv and `api_bridge/main.py` both live at the repo root.
+>
+> ```bash
+> # WRONG                       # RIGHT
+> cd custom-inspector           cd cci-mcp-inspector
+> source .venv/bin/activate     source .venv/bin/activate
+> python api_bridge/main.py     python api_bridge/main.py
+> ```
 
 ### 2. Configure a server
 
@@ -93,18 +110,24 @@ python -m src.workflows.mcp_inspector_workflow --config mcp_config/mcp_client.js
 
 ### 3b. Web UI
 
+Two processes, two folders — backend (Python) from the repo root, frontend (React)
+from `custom-inspector/`:
+
 ```bash
-# backend (FastAPI, binds 127.0.0.1:8000) — run from the project root
+# Terminal 1 — backend (FastAPI, binds 127.0.0.1:8000). Run from the REPO ROOT:
+cd cci-mcp-inspector
+source .venv/bin/activate
 python api_bridge/main.py
 
-# frontend (React dev server)
-cd custom-inspector
+# Terminal 2 — frontend (React dev server). Run from custom-inspector/:
+cd cci-mcp-inspector/custom-inspector
 pnpm install
 pnpm dev
 ```
 
 The UI lets you add endpoints, auto-detect auth (Connect), run OAuth in a popup,
-inspect one or many servers, and download each report format.
+inspect one or many servers, and download each report format. The frontend calls
+the backend at `http://localhost:8000`, so start the backend first.
 
 ## Output files
 
